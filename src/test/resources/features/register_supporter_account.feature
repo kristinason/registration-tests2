@@ -1,57 +1,29 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+Feature: Registrera Supporter Account
+  Som en besökare vill jag kunna registrera ett Supporter Account
+  så att jag kan använda tjänsten.
 
-    <modelVersion>4.0.0</modelVersion>
+  Background:
+    Given att jag öppnar registreringssidan för Supporter Account
 
-    <groupId>se.skola</groupId>
-    <artifactId>registration-tests</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  Scenario: Skapa användare – allt går som förväntat och ett konto skapas
+    When jag fyller i giltiga uppgifter
+    And jag godkänner terms and conditions
+    And jag skickar registreringen
+    Then ska jag komma vidare eller se att konto skapats
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
+  Scenario: Skapa användare – efternamn saknas
+    When jag fyller i giltiga uppgifter men utan efternamn
+    And jag godkänner terms and conditions
+    And jag skickar registreringen
+    Then ska jag se ett felmeddelande för efternamn
 
-    <dependencies>
+  Scenario: Skapa användare – lösenord matchar inte
+    When jag fyller i giltiga uppgifter men lösenorden matchar inte
+    And jag godkänner terms and conditions
+    And jag skickar registreringen
+    Then ska jag se ett felmeddelande för lösenordsmatchning
 
-        <!-- Cucumber -->
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>7.18.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>7.18.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- JUnit 4 -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Selenium -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>4.21.0</version>
-        </dependency>
-
-        <!-- WebDriverManager -->
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>5.8.0</version>
-        </dependency>
-
-    </dependencies>
-
-</project>
+  Scenario: Skapa användare – terms and conditions är inte godkänt
+    When jag fyller i giltiga uppgifter
+    And jag skickar registreringen utan att godkänna villkor
+    Then ska jag se ett felmeddelande om att villkor måste godkännas
