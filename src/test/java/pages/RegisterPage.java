@@ -16,62 +16,79 @@ public class RegisterPage {
     }
 
     public void open() {
+        driver.get("file:///Users/kristinason/Downloads/Register/Register.html");
 
-        driver.get("https://www.playhq.com/uk/signup");
-
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-
-
-        String page = driver.getPageSource().toLowerCase();
-        if (page.contains("verify you are human") || page.contains("just a moment")) {
-            throw new RuntimeException("Testet kan inte fortsätta eftersom Cloudflare blockerar Selenium..");
-        }
-
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("firstName")));
+        wait.until(
+                ExpectedConditions.presenceOfElementLocated(By.id("signup_form"))
+        );
     }
 
-    private WebElement findAny(By... locators) {
-        for (By by : locators) {
-            try {
-                WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(by));
-                if (el.isDisplayed()) return el;
-            } catch (TimeoutException ignored) { }
-        }
-        throw new NoSuchElementException("Element not found.");
+    private WebElement find(By locator) {
+        return wait.until(
+                ExpectedConditions.visibilityOfElementLocated(locator)
+        );
     }
 
-    public void setFirstName(String v) {
-        findAny(By.id("firstName")).sendKeys(v);
+    public void setDateOfBirth(String value) {
+        find(By.id("dp")).sendKeys(value);
     }
 
-    public void setLastName(String v) {
-        findAny(By.id("lastName")).sendKeys(v);
+    public void setFirstName(String value) {
+        find(By.id("member_firstname")).sendKeys(value);
     }
 
-    public void setEmail(String v) {
-        findAny(By.id("email")).sendKeys(v);
+    public void setLastName(String value) {
+        find(By.id("member_lastname")).sendKeys(value);
     }
 
-    public void setPassword(String v) {
-        findAny(By.id("password")).sendKeys(v);
+    public void setEmail(String value) {
+        find(By.id("member_emailaddress")).sendKeys(value);
     }
 
-    public void setConfirmPassword(String v) {
-        findAny(By.id("confirmPassword")).sendKeys(v);
+    public void setConfirmEmail(String value) {
+        find(By.id("member_confirmemailaddress")).sendKeys(value);
+    }
+
+    public void setPassword(String value) {
+        find(By.id("signupunlicenced_password")).sendKeys(value);
+    }
+
+    public void setConfirmPassword(String value) {
+        find(By.id("signupunlicenced_confirmpassword")).sendKeys(value);
     }
 
     public void acceptTerms() {
-        WebElement cb = findAny(By.id("terms"));
-        if (!cb.isSelected()) cb.click();
+        WebElement checkbox = find(By.id("sign_up_25"));
+
+        if (!checkbox.isSelected()) {
+            checkbox.click();
+        }
+    }
+
+    public void acceptAge() {
+        WebElement checkbox = find(By.id("sign_up_26"));
+
+        if (!checkbox.isSelected()) {
+            checkbox.click();
+        }
+    }
+
+    public void acceptCodeOfEthics() {
+        WebElement checkbox =
+                find(By.id("fanmembersignup_agreetocodeofethicsandconduct"));
+
+        if (!checkbox.isSelected()) {
+            checkbox.click();
+        }
     }
 
     public void submit() {
-        findAny(By.cssSelector("button[type='submit']")).click();
+        find(By.cssSelector("input[type='submit'][name='join']")).click();
     }
 
     public boolean pageContains(String text) {
-        return driver.getPageSource().toLowerCase().contains(text.toLowerCase());
+        return driver.getPageSource()
+                .toLowerCase()
+                .contains(text.toLowerCase());
     }
 }
